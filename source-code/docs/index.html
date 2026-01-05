@@ -1,0 +1,1168 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Documentation — Pixi VPN (CodeCanyon)</title>
+
+  <style>
+    @media only screen and (max-width: 425px) {
+
+      html,
+      body {
+        padding: 5px;
+      }
+    }
+
+    .panel {
+      display: none;
+    }
+
+    /* Show only on mobile screens (max-width: 767px for example) */
+    @media (max-width: 767px) {
+      .panel {
+        display: block;
+        /* or flex/grid depending on your layout */
+      }
+    }
+
+    :root {
+      --sidebar-w: 300px;
+      --gap: 24px;
+      --bg: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      --nav-bg: linear-gradient(145deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
+      --card: linear-gradient(145deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 100%);
+      --muted: #94a3b8;
+      --accent: #06b6d4;
+      --accent-secondary: #3b82f6;
+      --surface: rgba(15, 23, 42, 0.9);
+      --radius: 16px;
+      --max-width: 1400px;
+      --content-padding: 32px;
+      --glow: 0 0 30px rgba(6, 182, 212, 0.3);
+      --shadow-intense: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      background-attachment: fixed;
+      color: #f1f5f9;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.6;
+      padding: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow-x: hidden;
+    }
+
+    /* Animated background particles */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(circle at 20% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+      animation: drift 20s ease-in-out infinite alternate;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes drift {
+      0% {
+        transform: translateX(-20px) translateY(-20px) rotate(0deg);
+      }
+
+      100% {
+        transform: translateX(20px) translateY(20px) rotate(2deg);
+      }
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--max-width);
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      gap: var(--gap);
+      align-items: start;
+      position: relative;
+      z-index: 1;
+    }
+
+    nav.sidebar {
+      background: var(--nav-bg);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius);
+      padding: 24px;
+      height: calc(100vh - 48px);
+      position: sticky;
+      top: 24px;
+      overflow: hidden auto;
+      box-shadow: var(--shadow-intense), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    nav.sidebar:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-intense), var(--glow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .brand {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: #238062;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        left: -100%;
+      }
+
+      100% {
+        left: 100%;
+      }
+    }
+
+    .brand .logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #0a0f1c;
+      font-size: 20px;
+      box-shadow: 0 8px 25px rgba(6, 182, 212, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand .logo::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: logoGlow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes logoGlow {
+      0% {
+        transform: rotate(0deg);
+        opacity: 0.5;
+      }
+
+      100% {
+        transform: rotate(180deg);
+        opacity: 1;
+      }
+    }
+
+    .brand h1 {
+      font-size: 16px;
+      margin: 0;
+      font-weight: 700;
+      background: #ffffff;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .brand p {
+      margin: 0;
+      font-size: 12px;
+      color: #ffffff;
+      font-weight: 500;
+    }
+
+    .menu {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu a {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      padding: 16px;
+      border-radius: 12px;
+      color: #e2e8f0;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .menu a::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(59, 130, 246, 0.1));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .menu a:hover::before {
+      opacity: 1;
+    }
+
+    .menu a .icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+      display: grid;
+      place-items: center;
+      font-weight: 600;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    .menu a:hover {
+      transform: translateX(8px);
+      color: #ffffff;
+    }
+
+    .menu a:hover .icon {
+      background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+      box-shadow: 0 8px 25px rgba(6, 182, 212, 0.4);
+      transform: scale(1.1);
+    }
+
+    .menu a.active {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(59, 130, 246, 0.15));
+      color: #ffffff;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      box-shadow: 0 8px 25px rgba(6, 182, 212, 0.2);
+    }
+
+    .menu a.active .icon {
+      background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+      color: #0a0f1c;
+      box-shadow: 0 8px 25px rgba(6, 182, 212, 0.4);
+    }
+
+    .menu a small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 400;
+      z-index: 1;
+      position: relative;
+    }
+
+    .menu a:hover small {
+      color: #cbd5e1;
+    }
+
+    main.content {
+      background: var(--card);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius);
+      padding: var(--content-padding);
+      min-height: calc(100vh - 48px);
+      position: relative;
+      box-shadow: var(--shadow-intense), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden auto;
+      transition: all 0.3s ease;
+    }
+
+    main.content:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-intense), 0 0 50px rgba(6, 182, 212, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .toprow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .breadcrumbs {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .title {
+      font-size: 28px;
+      margin: 8px 0 0;
+      font-weight: 800;
+      background: linear-gradient(135deg, #f1f5f9, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    article {
+      max-width: 1000px;
+    }
+
+    h2,
+    h3,
+    h4 {
+      color: #f1f5f9;
+      margin-top: 32px;
+      font-weight: 700;
+    }
+
+    h3 {
+      font-size: 24px;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    h3::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+      border-radius: 2px;
+    }
+
+    h4 {
+      font-size: 18px;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    p {
+      margin-bottom: 16px;
+      color: #cbd5e1;
+      line-height: 1.7;
+    }
+
+    ul,
+    ol {
+      color: #cbd5e1;
+      line-height: 1.7;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    pre {
+      background: linear-gradient(145deg, rgba(2, 8, 23, 0.8), rgba(15, 23, 42, 0.9));
+      padding: 20px;
+      border-radius: 12px;
+      overflow: auto;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    pre::before {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 16px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ef4444;
+      box-shadow: 20px 0 0 #f59e0b, 40px 0 0 #10b981;
+    }
+
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+      font-size: 14px;
+      color: #e2e8f0;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .actions .kbd {
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.7));
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .faq-item {
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.5), rgba(30, 41, 59, 0.3));
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .faq-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2), 0 0 30px rgba(6, 182, 212, 0.1);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    a:hover {
+      color: var(--accent-secondary);
+      text-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
+    }
+
+    /* Mobile styles */
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+        padding: 0 16px;
+      }
+
+      nav.sidebar {
+        display: none;
+      }
+
+      .mobile-bar {
+        position: sticky;
+        top: 24px;
+        background: transparent;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        z-index: 40;
+      }
+
+      .mobile-bar .app-title {
+        font-weight: 700;
+        font-size: 18px;
+        color: #f1f5f9;
+      }
+
+      .hambtn {
+        background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+        border-radius: 12px;
+        padding: 12px 16px;
+        color: #0a0f1c;
+        border: none;
+        font-weight: 700;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+      }
+
+      .hambtn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(6, 182, 212, 0.4);
+      }
+
+      .drawer {
+        position: fixed;
+        inset: 0;
+        display: none;
+        z-index: 1000;
+      }
+
+      .drawer.show {
+        display: block;
+      }
+
+      .drawer .overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+      }
+
+      .drawer .panel {
+        position: absolute;
+        left: 16px;
+        top: 80px;
+        bottom: 16px;
+        width: calc(100% - 32px);
+        max-width: 350px;
+        background: var(--nav-bg);
+        backdrop-filter: blur(20px);
+        border-radius: 16px;
+        padding: 24px;
+        overflow: auto;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: var(--shadow-intense);
+        animation: slideIn 0.3s ease-out;
+      }
+
+      @keyframes slideIn {
+        0% {
+          transform: translateX(-100%);
+          opacity: 0;
+        }
+
+        100% {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      .drawer .panel .menu {
+        margin-top: 16px;
+      }
+
+      main.content {
+        padding: 24px;
+      }
+
+      .title {
+        font-size: 24px;
+      }
+
+      .toprow {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+    }
+
+    /* Focus accessibility */
+    a:focus,
+    button:focus {
+      outline: 3px solid rgba(6, 182, 212, 0.4);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, var(--accent-secondary), var(--accent));
+    }
+
+    /* Smooth reveal animation for sections */
+    section {
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Enhanced button styling */
+    button {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="container" role="application">
+
+    <!-- Sidebar -->
+    <nav class="sidebar" aria-label="Documentation navigation">
+      <div class="brand">
+        <div>
+          <h1>PIXI VPN GOLD</h1>
+          <p class="muted">Documentation</p>
+        </div>
+      </div>
+      <div class="menu" id="menu-desktop">
+        <a href="#intro" class="active" data-target="intro"><span class="icon">🏠</span>
+          <div><strong>Introduction</strong><small class="muted">Overview & quick start</small></div>
+        </a>
+        <a href="#install" data-target="install"><span class="icon">⚙️</span>
+          <div><strong>Installation</strong><small class="muted">Compile and install</small></div>
+        </a>
+        <a href="#config" data-target="config"><span class="icon">🔧</span>
+          <div><strong>Configuration</strong><small class="muted">Upload, A/B, setup</small></div>
+        </a>
+        <a href="#usage" data-target="usage"><span class="icon">🚀</span>
+          <div><strong>Usage</strong><small class="muted">How to use</small></div>
+        </a>
+        <a href="#faq" data-target="faq"><span class="icon">❓</span>
+          <div><strong>FAQ</strong><small class="muted">Common questions</small></div>
+        </a>
+        <a href="#changelog" data-target="changelog"><span class="icon">📝</span>
+          <div><strong>Changelog</strong><small class="muted">Version history</small></div>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Main content -->
+    <main class="content" id="main-content">
+      <div class="mobile-bar" id="mobile-bar" style="display:none;">
+        <div class="app-title">PIXI VPN GOLD</div>
+        <div><button class="hambtn" id="hambtn" aria-controls="mobile-drawer" aria-expanded="false"
+            aria-label="Open menu">☰ Menu</button></div>
+      </div>
+
+      <article>
+        <div class="toprow">
+          <div>
+            <div class="breadcrumbs">Documentation / <span id="crumb">Introduction</span></div>
+            <h2 class="title" id="page-title">Introduction</h2>
+
+          </div>
+          <div class="actions">
+            <div class="kbd">Use <strong>Ctrl + F</strong> to search page</div>
+          </div>
+        </div>
+
+        <!-- Sections -->
+        <section id="intro">
+          <p>
+            PIXI VPN GOLD Flutter application built with the latest Multiple protocol OpenVPN, V2ray and Wireguard Library
+            with beautiful user interface. 
+          </p>
+
+          <h4>✨ Key Features</h4>
+          <ul>
+            <li>Multi protocol OpenVPN, V2ray and Wireguard</li>
+            <li>Android 15+ Support</li>
+            <li>Simple minimal UI</li>
+            <li>Quick Connects</li>
+            <li>Free and premium location system</li>
+            <li>Google mobile Ads</li>
+            <li>Google In app Purchases</li>
+            <li>Help center</li>
+            <li>Live chat with user</li>
+            <li>User Protocol switch</li>
+            <li>User Authentication</li>
+          </ul>
+        </section>
+
+        <section id="install" class="hidden">
+          <h3>Installation</h3>
+
+          <p>Before compiling the <strong>Pixi VPN</strong> Flutter app, ensure the following tools are properly
+            installed and configured on your development system:</p>
+
+          <h4>🛠️ System Requirements</h4>
+          <ul>
+            <li>✅ Flutter SDK <strong>3.32.8</strong> (Latest stable version recommended)</li>
+            <li>✅ Android Studio (Narwhal recommended for best experience)
+            </li>
+            <li>✅ Java JDK <strong>21.0.2</strong> properly installed and added to system PATH</li>
+            <li>✅ Xcode <strong>15.0+</strong> (for iOS development on macOS)</li>
+            <li>✅ CocoaPods <strong>1.12+</strong> (for iOS dependencies)</li>
+          </ul>
+
+          <p>Verify your development environment by running the Flutter doctor command:</p>
+          <pre><code>flutter doctor -v</code></pre>
+
+          <h4>⚙️ Step-by-Step Compilation Process</h4>
+          <ol>
+            <li>📁 Open the project folder in <strong>Android Studio</strong> or your preferred IDE</li>
+            <li>📦 Run <code>flutter pub get</code> to fetch all required dependencies</li>
+            <li>🧹 Clean the project: <code>flutter clean</code></li>
+            <li>🔧 For iOS: <code>cd ios && pod install</code></li>
+            <li>📱 Connect your device or start an emulator</li>
+            <li>▶️ Click the green <strong>Run</strong> button or use <code>flutter run</code></li>
+          </ol>
+
+          <p>🎉 Once compilation is complete, the Pixi VPN app will launch on your selected device with all
+            features ready to use.</p>
+        </section>
+
+        <section id="config" class="hidden">
+          <h3>Configuration</h3>
+
+          <p>This comprehensive guide walks you through deploying your Laravel-based admin panel to a shared hosting
+            environment using <strong>cPanel</strong>. Each step is carefully detailed to ensure a smooth and successful
+            deployment.</p>
+
+          <h4>🌐 1. Domain & Subdomain Setup</h4>
+          <p>
+            First, decide on your hosting strategy. You can either use your main domain (e.g.,
+            <code>vpnadmin.com</code>) or create a dedicated subdomain (e.g., <code>admin.vpnapp.com</code>).
+          </p>
+          <p>To create a subdomain:</p>
+          <ol>
+            <li>Navigate to cPanel's <strong>Subdomains</strong> section</li>
+            <li>Enter your desired subdomain name</li>
+            <li>Select the parent domain</li>
+            <li>Click <strong>Create</strong></li>
+          </ol>
+
+          <h4>📂 2. Upload Your Laravel Project</h4>
+          <p>
+            Access the <strong>File Manager</strong> in cPanel and navigate to your domain's root directory:
+          </p>
+          <ul>
+            <li>For main domain: <code>public_html/</code></li>
+            <li>For subdomain: <code>public_html/subdomain_name/</code></li>
+          </ul>
+          <ol>
+            <li>📤 Click <strong>Upload</strong> and select your Laravel project ZIP file</li>
+            <li>⏳ Wait for the upload to complete</li>
+            <li>📦 Right-click the ZIP file and select <strong>Extract</strong></li>
+            <li>🗂️ Move the extracted files to the root directory if needed</li>
+          </ol>
+
+          <h4>🗄️ 3. MySQL Database Configuration</h4>
+          <p>Navigate to <strong>MySQL® Databases</strong> in your cPanel:</p>
+          <ol>
+            <li>🔧 <strong>Create Database:</strong> Enter a name like <code>vpn_admin_db</code></li>
+            <li>👤 <strong>Create User:</strong> Add a new database user with a strong, secure password</li>
+            <li>🔐 <strong>Grant Privileges:</strong> Add the user to the database with <strong>All Privileges</strong>
+            </li>
+            <li>✅ Confirm the setup by checking the database list</li>
+          </ol>
+
+          <h4>📥 4. Database Import Process</h4>
+          <p>
+            Open <strong>phpMyAdmin</strong> from your cPanel and follow these steps:
+          </p>
+          <ol>
+            <li>🎯 Select your newly created database from the left sidebar</li>
+            <li>📥 Click the <strong>Import</strong> tab in the top menu</li>
+            <li>📄 Choose your <code>database.sql</code> file (included in the project package)</li>
+            <li>⚡ Click <strong>Go</strong> to begin the import process</li>
+            <li>✅ Verify that all tables have been imported successfully</li>
+          </ol>
+
+          <h4>🔧 5. Environment Configuration</h4>
+          <p>
+            Locate and edit the <code>.env</code> file in your Laravel root directory:
+          </p>
+          <pre><code>APP_NAME="Pixi VPN Admin"
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://yourdomain.com
+
+DB_CONNECTION=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=your_database_name
+DB_USERNAME=your_database_user
+DB_PASSWORD=your_secure_password
+
+# Additional security settings
+SESSION_LIFETIME=120
+SESSION_SECURE_COOKIE=true</code></pre>
+          <p>
+            🔒 <strong>Important:</strong> Ensure <code>APP_URL</code> exactly matches your domain or subdomain URL.
+          </p>
+
+          <h4>🌟 6. Final Deployment Steps</h4>
+          <ol>
+            <li>🌐 Visit your domain/subdomain in a web browser</li>
+            <li>🔍 Check for any error messages and resolve them</li>
+            <li>✅ Verify that the admin panel loads correctly</li>
+            <li>🔐 Test the login functionality</li>
+          </ol>
+
+          
+        </section>
+
+        <section id="usage" class="hidden">
+          <h3>Usage Guide</h3>
+          <p>Master the admin panel and mobile VPN app with this comprehensive usage guide covering all essential
+            features and functionalities. Make sure use everything correctly.</p>
+
+          <h4>🔐 1. Admin Panel Access</h4>
+          <p>
+            Navigate to your admin panel URL in any modern web browser. Use these demo credentials to get started:
+          </p>
+          <div class="faq-item">
+            <p><strong>📧 Email:</strong> <code>admin@gmail.com</code></p>
+            <p><strong>🔑 Password:</strong> <code>123456</code></p>
+            <p><small>💡 <em>Pro Tip: Change these credentials immediately after your first login for
+                  security</em></small></p>
+          </div>
+          <p>You can update login credentials, profile information, and security settings from the profile section
+            within the admin dashboard.</p>
+
+          <h4>💰 3. AdMob Integration Setup</h4>
+          <p>Monetize your app effectively with Google AdMob integration:</p>
+
+          <h5>📱 A. Android Configuration</h5>
+          <p>
+            Navigate to your Flutter project and edit:
+            <code>android/app/src/main/AndroidManifest.xml</code>
+          </p>
+          <p>Add your AdMob App ID within the <code>&lt;application&gt;</code> tag:</p>
+          <pre><code>&lt;application&gt;
+    ...
+    &lt;meta-data
+        android:name="com.google.android.gms.ads.APPLICATION_ID"
+        android:value="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"/&gt;
+    ...
+&lt;/application&gt;</code></pre>
+
+          <h5>🎯 B. Ad Unit Management</h5>
+          <p>Configure your ad units through the admin panel's <strong>Advertisement</strong> section:</p>
+          <ul>
+            <li>🏷️ <strong>Banner Ads:</strong> Displayed at top/bottom of screens</li>
+            <li>📺 <strong>Interstitial Ads:</strong> Full-screen ads between actions</li>
+            <li>🎁 <strong>Rewarded Ads:</strong> Users watch for premium features</li>
+            <li>🎯 <strong>Native Ads:</strong> Seamlessly integrated content ads</li>
+          </ul>
+
+          <h4>🔗 4. App-to-Admin Connection</h4>
+          <p>
+            Link your Flutter app with your admin panel backend:
+          </p>
+          <ol>
+            <li>📂 Open your Flutter project in <strong>Android Studio</strong></li>
+            <li>🧭 Navigate to: <code>lib/utils/app_string.dart</code></li>
+            <li>🔍 Find the base URL configuration:</li>
+            <pre><code>class AppString {
+  static const String baseUrl = "https://vpn-admin.pixiumlab.com";
+}</code></pre>
+            <li>✏️ Replace with your admin panel domain:</li>
+            <pre><code>class AppString {
+  static const String baseUrl = "https://yourdomain.com";
+}</code></pre>
+            <li>💾 Save the file</li>
+            <li>🔄 Rebuild the app: <code>flutter clean && flutter pub get</code></li>
+          </ol>
+
+          <h4>💳 5. In-App Purchase Configuration</h4>
+          <p>Set up subscription plans for premium features:</p>
+          <ol>
+            <li>🏪 Configure products in Google Play Console</li>
+            <li>💰 Set subscription prices and billing cycles</li>
+            <li>⚙️ Update product IDs in the source code root folder> lib> in app purchase</li>
+            <li>🧪 Test purchases using test accounts</li>
+          </ol>
+
+  
+        </section>
+
+        <section id="faq" class="hidden">
+          <h3>Frequently Asked Questions</h3>
+          <p>Find answers to common questions and troubleshooting solutions for Pixi VPN development and
+            deployment. For more query please contact us any time at email : pixiumlab@gmail.com</p>
+
+          <div class="faq-item">
+            <h4>❓ Where can I obtain free VPN servers for testing?</h4>
+            <p>Several reliable sources provide free VPN servers perfect for development and testing:</p>
+
+          </div>
+
+          <div class="faq-item">
+            <h4>❓ How do I set up my own VPN servers?</h4>
+            <p>Creating your own VPN infrastructure gives you complete control over performance and security:</p>
+
+            <h5>🖥️ VPS Requirements:</h5>
+            <ul>
+              <li>💾 <strong>RAM:</strong> Minimum 1GB (2GB recommended)</li>
+              <li>💽 <strong>Storage:</strong> 10GB SSD minimum</li>
+              <li>🌐 <strong>Bandwidth:</strong> Unmetered or high limits</li>
+              <li>📍 <strong>Locations:</strong> Multiple regions for better coverage</li>
+            </ul>
+
+            <p>💰 <strong>Cost Breakdown:</strong> Expect $4-20/month per server depending on location and
+              specifications.</p>
+          </div>
+
+          <div class="faq-item">
+            <h4>❓ What are the monetization strategies for Pixi VPN?</h4>
+            <p>Multiple revenue streams can make your VPN app profitable:</p>
+
+            <h5>📺 AdMob Advertisement Revenue:</h5>
+            <ul>
+              <li>🏷️ <strong>Banner Ads:</strong> $0.50-2.00 per 1000 impressions</li>
+              <li>📱 <strong>Interstitial Ads:</strong> $1.00-5.00 per 1000 impressions</li>
+              <li>🎁 <strong>Rewarded Ads:</strong> $2.00-8.00 per 1000 views</li>
+            </ul>
+
+            <h5>💎 Premium Subscription Plans:</h5>
+            <ul>
+              <li>📱 <strong>Monthly:</strong> $4.99-9.99/month</li>
+              <li>📅 <strong>Yearly:</strong> $29.99-59.99/year (better value)</li>
+              <li>👨‍👩‍👧‍👦 <strong>Family Plans:</strong> $9.99-19.99/month</li>
+            </ul>
+
+            
+          </div>
+
+        
+        </section>
+
+        <section id="changelog" class="hidden">
+          <h3>Changelog & Version History</h3>
+          <p>Track the evolution of Pixi VPN with detailed version updates, new features, and improvements:</p>
+
+
+          <div class="faq-item">
+            <h4>📈 Version 1.0.0 - release</h4>
+            <p><strong>Release Date:</strong> 12 Nov 2025</p>
+            <ul>
+              <li>🌐 <strong>Initial release</strong> — Multi-protocol VPN App </li>
+              
+            </ul>
+          </div>
+
+        
+
+    
+          <p>💡 <strong>Developer Note:</strong> Each version includes comprehensive testing across multiple devices and
+            OS versions to ensure reliability and performance.</p>
+        </section>
+
+      </article>
+    </main>
+  </div>
+
+  <div class="drawer" id="mobile-drawer" aria-hidden="true">
+    <div class="overlay" id="drawer-overlay"></div>
+    <div class="panel" role="dialog" aria-label="Navigation drawer">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+        <strong style="color: #f1f5f9;">Navigation</strong>
+        <button id="close-drawer" aria-label="Close menu"
+          style="background:transparent;border:none;color:var(--muted);font-size:18px;">✕</button>
+      </div>
+      <div class="menu" id="menu-mobile"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      let allLinks;
+      const main = document.getElementById('main-content');
+      const title = document.getElementById('page-title');
+      const crumb = document.getElementById('crumb');
+      const sections = document.querySelectorAll('main.content article section');
+
+      function setActive(targetId) {
+        allLinks.forEach(a => a.classList.toggle('active', a.dataset.target === targetId));
+        sections.forEach(section => section.classList.add('hidden'));
+        const el = document.getElementById(targetId);
+        if (el) {
+          el.classList.remove('hidden');
+          const newTitle = el.querySelector('h3') ? el.querySelector('h3').innerText : 'Introduction';
+          title.textContent = newTitle;
+          crumb.textContent = newTitle;
+
+          // Add smooth reveal animation
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(20px)';
+          setTimeout(() => {
+            el.style.transition = 'all 0.4s ease-out';
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+          }, 50);
+        }
+        main.scrollTop = 0;
+      }
+
+      const hambtn = document.getElementById('hambtn');
+      const drawer = document.getElementById('mobile-drawer');
+      const overlay = document.getElementById('drawer-overlay');
+      const closeBtn = document.getElementById('close-drawer');
+      const menuMobile = document.getElementById('menu-mobile');
+
+      function openDrawer() {
+        drawer.classList.add('show');
+        drawer.setAttribute('aria-hidden', 'false');
+        hambtn.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeDrawer() {
+        drawer.classList.remove('show');
+        drawer.setAttribute('aria-hidden', 'true');
+        hambtn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+
+      if (hambtn) {
+        hambtn.addEventListener('click', () => { openDrawer(); });
+      }
+      overlay.addEventListener('click', closeDrawer);
+      closeBtn.addEventListener('click', closeDrawer);
+
+      function initializeMenu() {
+        const desktopMenu = document.getElementById('menu-desktop');
+        if (desktopMenu && menuMobile) {
+          menuMobile.innerHTML = '';
+          const desktopLinks = desktopMenu.querySelectorAll('a');
+          desktopLinks.forEach(link => {
+            const clonedLink = link.cloneNode(true);
+            clonedLink.addEventListener('click', e => {
+              e.preventDefault();
+              const t = e.currentTarget.dataset.target;
+              setActive(t);
+              closeDrawer();
+            });
+            menuMobile.appendChild(clonedLink);
+          });
+        }
+
+        allLinks = Array.from(document.querySelectorAll('.menu a'));
+        const desktopLinks = document.querySelectorAll('#menu-desktop a');
+        desktopLinks.forEach(a => {
+          a.addEventListener('click', e => {
+            e.preventDefault();
+            const t = a.dataset.target;
+            setActive(t);
+          });
+        });
+      }
+
+      const mobileBar = document.getElementById('mobile-bar');
+      function checkSize() {
+        if (window.innerWidth <= 900) {
+          mobileBar.style.display = 'flex';
+        } else {
+          mobileBar.style.display = 'none';
+          closeDrawer();
+        }
+      }
+
+      // Smooth scrolling for internal navigation
+      function smoothScrollToTop() {
+        const start = main.scrollTop;
+        const startTime = performance.now();
+        const duration = 300;
+
+        function scroll(currentTime) {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const easing = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+
+          main.scrollTop = start * (1 - easing);
+
+          if (progress < 1) {
+            requestAnimationFrame(scroll);
+          }
+        }
+
+        requestAnimationFrame(scroll);
+      }
+
+      // Enhanced keyboard navigation
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeDrawer();
+        }
+        if (e.ctrlKey && e.key === 'k') {
+          e.preventDefault();
+          // Focus on search or first menu item
+          const firstLink = document.querySelector('.menu a');
+          if (firstLink) firstLink.focus();
+        }
+      });
+
+      // Initialize
+      window.addEventListener('resize', checkSize);
+      checkSize();
+      initializeMenu();
+      setActive('intro');
+
+      // Add intersection observer for active section highlighting
+      const observerOptions = {
+        root: main,
+        rootMargin: '-20% 0px -70% 0px',
+        threshold: 0
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            if (id && allLinks) {
+              allLinks.forEach(link => {
+                link.classList.toggle('active', link.dataset.target === id);
+              });
+            }
+          }
+        });
+      }, observerOptions);
+
+      // Observe all sections
+      sections.forEach(section => observer.observe(section));
+
+      // Add loading animation
+      document.addEventListener('DOMContentLoaded', () => {
+        document.body.style.opacity = '0';
+        document.body.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          document.body.style.transition = 'all 0.6s ease-out';
+          document.body.style.opacity = '1';
+          document.body.style.transform = 'translateY(0)';
+        }, 100);
+      });
+    })();
+  </script>
+</body>
+
+</html>
